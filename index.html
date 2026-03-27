@@ -9,157 +9,58 @@
 <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@400;600;700;800&family=Noto+Sans+JP:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg-base:       #181B20;
-    --bg-panel:      #1F2329;
-    --bg-card:       #252A32;
-    --border:        #2E3545;
-    --border-accent: #3D4A60;
-    --accent-blue:   #4A90D9;
-    --accent-cyan:   #36BFA0;
-    --accent-amber:  #E8A838;
-    --accent-rose:   #D9536A;
-    --text-primary:  #E8ECF4;
-    --text-secondary:#8B95A8;
-    --text-dim:      #5A6478;
-    --header-h:      44px;
-    --tape-h:        56px;
-    --font-mono:     'Space Mono', monospace;
-    --font-display:  'Syne', sans-serif;
-    --font-jp:       'Noto Sans JP', sans-serif;
+    --bg-base:#181B20;--bg-panel:#1F2329;--bg-card:#252A32;--border:#2E3545;--border-accent:#3D4A60;
+    --accent-blue:#4A90D9;--accent-cyan:#36BFA0;--accent-amber:#E8A838;--accent-rose:#D9536A;
+    --text-primary:#E8ECF4;--text-secondary:#8B95A8;--text-dim:#5A6478;
+    --header-h:44px;--tape-h:56px;
+    --font-mono:'Space Mono',monospace;--font-display:'Syne',sans-serif;--font-jp:'Noto Sans JP',sans-serif;
   }
-
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-  html, body {
-    height: 100%;
-    background: var(--bg-base);
-    color: var(--text-primary);
-    font-family: var(--font-jp);
-    font-size: 12px;
-    overflow: hidden;
-  }
-
-  .shell {
-    display: grid;
-    grid-template-rows: var(--header-h) var(--tape-h) 1fr;
-    height: 100vh;
-    width: 100vw;
-    overflow: hidden;
-  }
-
-  .top-header {
-    display: flex; align-items: center; justify-content: space-between; padding: 0 16px;
-    background: linear-gradient(90deg, #181B20 0%, #1F2A38 50%, #181B20 100%);
-    border-bottom: 1px solid var(--border); gap: 16px; z-index: 10;
-  }
-  .logo-group { display: flex; align-items: center; gap: 10px; }
-  .logo-icon {
-    width: 24px; height: 24px;
-    background: linear-gradient(135deg, var(--accent-blue), var(--accent-cyan));
-    clip-path: polygon(50% 0%, 100% 38%, 82% 100%, 18% 100%, 0% 38%);
-  }
-  .logo-text { font-family: var(--font-display); font-weight: 800; font-size: 13px; letter-spacing: 0.12em; line-height: 1; }
-  .logo-sub { font-family: var(--font-mono); font-size: 9px; color: var(--text-dim); letter-spacing: 0.18em; line-height: 1; margin-top: 2px;}
-  .header-meta { display: flex; align-items: center; gap: 20px; flex: 1; justify-content: flex-end; }
-  .meta-pill { display: flex; align-items: center; gap: 6px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 20px; padding: 3px 10px; }
-  .pulse-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent-cyan); animation: pulse 2s infinite; }
-  @keyframes pulse { 0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(54,191,160,0.5); } 50% { opacity: 0.6; box-shadow: 0 0 0 4px rgba(54,191,160,0); } }
-  .meta-label { font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.1em; color: var(--text-secondary); }
-  #clock { font-family: var(--font-mono); font-size: 11px; color: var(--accent-blue); letter-spacing: 0.06em; }
-
-  .tape-row { background: var(--bg-panel); border-bottom: 1px solid var(--border); overflow: hidden; }
-  .tape-row .tradingview-widget-container,
-  .tape-row .tradingview-widget-container__widget { height: var(--tape-h) !important; }
-
-  .main-body {
-    display: grid;
-    grid-template-columns: repeat(4, 310px) 1fr;
-    gap: 0;
-    overflow: hidden;
-    height: 100%;
-  }
-
-  .col { display: flex; flex-direction: column; overflow: hidden; border-right: 1px solid var(--border); height: 100%; }
-  .col:last-child { border-right: none; }
-
-  .col-header {
-    display: flex; align-items: center; gap: 8px; padding: 6px 12px;
-    background: var(--bg-panel); border-bottom: 1px solid var(--border); flex-shrink: 0;
-  }
-  .col-header-icon { width: 3px; height: 14px; border-radius: 2px; flex-shrink: 0; }
-  .icon-blue  { background: var(--accent-blue); }
-  .icon-cyan  { background: var(--accent-cyan); }
-  .icon-amber { background: var(--accent-amber); }
-  .icon-grey  { background: #8B95A8; }
-  .col-title { font-family: var(--font-display); font-weight: 700; font-size: 9px; letter-spacing: 0.14em; color: var(--text-secondary); text-transform: uppercase; }
-
-  .section-label {
-    display: flex; align-items: center; gap: 6px; padding: 5px 12px 4px;
-    background: rgba(255,255,255,0.02); border-bottom: 1px solid var(--border); flex-shrink: 0;
-  }
-  .section-label span { font-family: var(--font-mono); font-size: 8px; letter-spacing: 0.14em; color: var(--text-dim); }
-  .section-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
-
-  /* ウィジェットブロック：ロゴを下にはみ出してクリップ */
-  .widget-block { overflow: hidden; min-height: 0; position: relative; }
-  .widget-block .tradingview-widget-container { height: 100% !important; width: 100% !important; overflow: hidden; }
-  .widget-block .tradingview-widget-container__widget { height: calc(100% + 34px) !important; width: 100% !important; }
-
-  /* mini-cell内ウィジェットも同様 */
-  .mini-cell .tradingview-widget-container { height: 100%; width: 100%; overflow: hidden; }
-  .mini-cell .tradingview-widget-container__widget { height: calc(100% + 34px) !important; width: 100% !important; }
-
-  /* テープのロゴクリップ */
-  .tape-row .tradingview-widget-container { overflow: hidden; }
-  .tape-row .tradingview-widget-container__widget { height: calc(var(--tape-h) + 34px) !important; }
-
-  /* ─── COL4: RATES 2分割 ─── */
-  .rates-col-body {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-    min-height: 0;
-  }
-  .rates-section {
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-    min-height: 0;
-    border-bottom: 1px solid var(--border);
-  }
-  .rates-section:last-child { border-bottom: none; }
-
-  /* 米国債・為替：5行ぴったり収まる最小高さに、商品は残り全て */
-  .bond-fx-area { flex: 0 0 48%; }
-  .commo-area   { flex: 1; }
-
-  /* ─── COMPETITORS 2×3グリッド ─── */
-  .competitor-grid {
-    display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr 1fr; gap: 1px;
-    background: var(--border); height: 100%; flex: 1; overflow: hidden;
-  }
-  .mini-cell { background: var(--bg-base); overflow: hidden; position: relative; }
-  .mini-cell-label {
-    position: absolute; bottom: 6px; left: 6px;
-    font-family: var(--font-mono); font-size: 8px; font-weight: bold; letter-spacing: 0.08em;
-    color: var(--text-primary); z-index: 2; pointer-events: none;
-    background: rgba(24,27,32,0.85); padding: 2px 6px; border-radius: 3px;
-  }
-
-  /* ─── LOADING ─── */
-  .loading-overlay {
-    position: fixed; inset: 0; background: var(--bg-base);
-    display: flex; flex-direction: column; align-items: center; justify-content: center;
-    z-index: 9999; transition: opacity 0.6s ease; gap: 16px;
-  }
-  .loading-overlay.hidden { opacity: 0; pointer-events: none; display: none; }
-  .loader-logo { font-family: var(--font-display); font-weight: 800; font-size: 22px; letter-spacing: 0.2em; background: linear-gradient(90deg, var(--accent-blue), var(--accent-cyan)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-  .loader-bar-wrap { width: 200px; height: 2px; background: var(--border); border-radius: 1px; overflow: hidden; }
-  .loader-bar { height: 100%; background: linear-gradient(90deg, var(--accent-blue), var(--accent-cyan)); animation: loadbar 1.5s ease forwards; width: 0%; }
-  @keyframes loadbar { 0% { width: 0%; } 80% { width: 90%; } 100% { width: 100%; } }
-  .shell { opacity: 0; transition: opacity 0.5s ease; }
-  .shell.visible { opacity: 1; }
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+  html,body{height:100%;background:var(--bg-base);color:var(--text-primary);font-family:var(--font-jp);font-size:12px;overflow:hidden;}
+  .shell{display:grid;grid-template-rows:var(--header-h) var(--tape-h) 1fr;height:100vh;width:100vw;overflow:hidden;}
+  .top-header{display:flex;align-items:center;justify-content:space-between;padding:0 16px;background:linear-gradient(90deg,#181B20 0%,#1F2A38 50%,#181B20 100%);border-bottom:1px solid var(--border);gap:16px;z-index:10;}
+  .logo-group{display:flex;align-items:center;gap:10px;}
+  .logo-icon{width:24px;height:24px;background:linear-gradient(135deg,var(--accent-blue),var(--accent-cyan));clip-path:polygon(50% 0%,100% 38%,82% 100%,18% 100%,0% 38%);}
+  .logo-text{font-family:var(--font-display);font-weight:800;font-size:13px;letter-spacing:0.12em;line-height:1;}
+  .logo-sub{font-family:var(--font-mono);font-size:9px;color:var(--text-dim);letter-spacing:0.18em;line-height:1;margin-top:2px;}
+  .header-meta{display:flex;align-items:center;gap:20px;flex:1;justify-content:flex-end;}
+  .meta-pill{display:flex;align-items:center;gap:6px;background:var(--bg-card);border:1px solid var(--border);border-radius:20px;padding:3px 10px;}
+  .pulse-dot{width:6px;height:6px;border-radius:50%;background:var(--accent-cyan);animation:pulse 2s infinite;}
+  @keyframes pulse{0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(54,191,160,.5)}50%{opacity:.6;box-shadow:0 0 0 4px rgba(54,191,160,0)}}
+  .meta-label{font-family:var(--font-mono);font-size:9px;letter-spacing:.1em;color:var(--text-secondary);}
+  #clock{font-family:var(--font-mono);font-size:11px;color:var(--accent-blue);letter-spacing:.06em;}
+  .tape-row{background:var(--bg-panel);border-bottom:1px solid var(--border);overflow:hidden;}
+  .tape-row .tradingview-widget-container{overflow:hidden;}
+  .tape-row .tradingview-widget-container__widget{height:calc(var(--tape-h) + 34px)!important;}
+  .main-body{display:grid;grid-template-columns:repeat(4,310px) 1fr;gap:0;overflow:hidden;height:100%;}
+  .col{display:flex;flex-direction:column;overflow:hidden;border-right:1px solid var(--border);height:100%;}
+  .col:last-child{border-right:none;}
+  .col-header{display:flex;align-items:center;gap:8px;padding:6px 12px;background:var(--bg-panel);border-bottom:1px solid var(--border);flex-shrink:0;}
+  .col-header-icon{width:3px;height:14px;border-radius:2px;flex-shrink:0;}
+  .icon-blue{background:var(--accent-blue);}.icon-cyan{background:var(--accent-cyan);}.icon-amber{background:var(--accent-amber);}.icon-grey{background:#8B95A8;}
+  .col-title{font-family:var(--font-display);font-weight:700;font-size:9px;letter-spacing:.14em;color:var(--text-secondary);text-transform:uppercase;}
+  .section-label{display:flex;align-items:center;gap:6px;padding:5px 12px 4px;background:rgba(255,255,255,.02);border-bottom:1px solid var(--border);flex-shrink:0;}
+  .section-label span{font-family:var(--font-mono);font-size:8px;letter-spacing:.14em;color:var(--text-dim);}
+  .section-label::after{content:'';flex:1;height:1px;background:var(--border);}
+  .widget-block{overflow:hidden;min-height:0;position:relative;}
+  .widget-block .tradingview-widget-container{height:100%!important;width:100%!important;overflow:hidden;}
+  .widget-block .tradingview-widget-container__widget{height:calc(100% + 34px)!important;width:100%!important;}
+  .mini-cell .tradingview-widget-container{height:100%;width:100%;overflow:hidden;}
+  .mini-cell .tradingview-widget-container__widget{height:calc(100% + 34px)!important;width:100%!important;}
+  .rates-col-body{flex:1;display:flex;flex-direction:column;overflow:hidden;min-height:0;}
+  .rates-section{display:flex;flex-direction:column;overflow:hidden;min-height:0;border-bottom:1px solid var(--border);}
+  .rates-section:last-child{border-bottom:none;}
+  .bond-fx-area{flex:0 0 48%;}.commo-area{flex:1;}
+  .competitor-grid{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr 1fr;gap:1px;background:var(--border);height:100%;flex:1;overflow:hidden;}
+  .mini-cell{background:var(--bg-base);overflow:hidden;position:relative;}
+  .mini-cell-label{position:absolute;bottom:6px;left:6px;font-family:var(--font-mono);font-size:8px;font-weight:bold;letter-spacing:.08em;color:var(--text-primary);z-index:2;pointer-events:none;background:rgba(24,27,32,.85);padding:2px 6px;border-radius:3px;}
+  .loading-overlay{position:fixed;inset:0;background:var(--bg-base);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999;transition:opacity .6s ease;gap:16px;}
+  .loading-overlay.hidden{opacity:0;pointer-events:none;display:none;}
+  .loader-logo{font-family:var(--font-display);font-weight:800;font-size:22px;letter-spacing:.2em;background:linear-gradient(90deg,var(--accent-blue),var(--accent-cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+  .loader-bar-wrap{width:200px;height:2px;background:var(--border);border-radius:1px;overflow:hidden;}
+  .loader-bar{height:100%;background:linear-gradient(90deg,var(--accent-blue),var(--accent-cyan));animation:loadbar 1.5s ease forwards;width:0%;}
+  @keyframes loadbar{0%{width:0%}80%{width:90%}100%{width:100%}}
+  .shell{opacity:0;transition:opacity .5s ease;}.shell.visible{opacity:1;}
 </style>
 </head>
 <body>
@@ -177,29 +78,18 @@
   </header>
 
   <div class="tape-row">
-    <div class="tradingview-widget-container">
-      <div class="tradingview-widget-container__widget"></div>
-      <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js" async>
-      {
-        "symbols": [
-          {"proName": "TVC:US10Y",          "title": "米10年債"},
-          {"proName": "TVC:US02Y",          "title": "米2年債"},
-          {"proName": "CAPITALCOM:DXY",     "title": "DXY"},
-          {"proName": "CAPITALCOM:US500",   "title": "S&P500"},
-          {"proName": "CAPITALCOM:USTECH",  "title": "NASDAQ"},
-          {"proName": "CAPITALCOM:VIX",     "title": "VIX指数"},
-          {"proName": "OANDA:JP225USD",     "title": "日経225 (SGX)"},
-          {"proName": "FX:USDJPY",          "title": "USD/JPY"},
-          {"proName": "FX:EURJPY",          "title": "EUR/JPY"},
-          {"proName": "TVC:GOLD",           "title": "金"},
-          {"proName": "TVC:COPPER",         "title": "銅"},
-          {"proName": "TVC:UKOIL",          "title": "ブレント"},
-          {"proName": "TVC:USNG",           "title": "天然ガス"}
-        ],
-        "showSymbolLogo": false, "isTransparent": true, "displayMode": "regular", "colorTheme": "dark", "locale": "ja"
-      }
-      </script>
-    </div>
+    <div class="tradingview-widget-container"><div class="tradingview-widget-container__widget"></div>
+    <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js" async>
+    {"symbols":[
+      {"proName":"TVC:US10Y","title":"米10年債"},{"proName":"TVC:US02Y","title":"米2年債"},
+      {"proName":"TVC:DXY","title":"DXY"},{"proName":"TVC:SPX","title":"S&P500"},
+      {"proName":"TVC:NDX","title":"NASDAQ"},{"proName":"TVC:VIX","title":"VIX"},
+      {"proName":"OANDA:JP225USD","title":"日経225"},{"proName":"FX:USDJPY","title":"USD/JPY"},
+      {"proName":"FX:EURJPY","title":"EUR/JPY"},{"proName":"TVC:GOLD","title":"金"},
+      {"proName":"TVC:COPPER","title":"銅"},{"proName":"TVC:UKOIL","title":"ブレント"},
+      {"proName":"TVC:USNG","title":"天然ガス"}
+    ],"showSymbolLogo":false,"isTransparent":true,"displayMode":"regular","colorTheme":"dark","locale":"ja"}
+    </script></div>
   </div>
 
   <div class="main-body">
@@ -207,34 +97,26 @@
     <!-- COL1: MACRO FUTURES -->
     <div class="col">
       <div class="col-header"><div class="col-header-icon icon-blue"></div><div class="col-title">MACRO FUTURES / CFD</div></div>
-      <div style="flex:1; display:flex; flex-direction:column; overflow:hidden;">
+      <div style="flex:1;display:flex;flex-direction:column;overflow:hidden;">
         <div class="section-label"><span>主要先物・先行指標 (CFD)</span></div>
         <div class="widget-block" style="flex:1;">
-          <div class="tradingview-widget-container">
-            <div class="tradingview-widget-container__widget"></div>
-            <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-market-overview.js" async>
-            {
-              "colorTheme": "dark", "dateRange": "1D", "showChart": false, "locale": "ja", "width": "100%", "height": "100%", "isTransparent": true,
-              "tabs": [{
-                "title": "先物・先行指標",
-                "symbols": [
-                  {"s": "CAPITALCOM:US500",   "d": "E-mini S&P 500"},
-                  {"s": "CAPITALCOM:USTECH",  "d": "E-mini NASDAQ 100"},
-                  {"s": "CAPITALCOM:VIX",     "d": "VIX先物"},
-                  {"s": "OANDA:EU50EUR",      "d": "Euro Stoxx 50"},
-                  {"s": "CAPITALCOM:DE30",    "d": "DAX先物"},
-                  {"s": "OANDA:JP225USD",     "d": "日経225先物 (大阪)"},
-                  {"s": "OANDA:JP225USD",     "d": "日経225先物 (SGX)"},
-                  {"s": "CAPITALCOM:NIY",     "d": "日経225先物 (CME)"},
-                  {"s": "CAPITALCOM:INDIA50", "d": "GIFT Nifty 50先物"},
-                  {"s": "HSI:HSI",            "d": "香港ハンセン指数先物"},
-                  {"s": "CAPITALCOM:CN50",    "d": "FTSE 中国A50先物"}
-
-                ]
-              }]
-            }
-            </script>
-          </div>
+          <div class="tradingview-widget-container"><div class="tradingview-widget-container__widget"></div>
+          <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-market-overview.js" async>
+          {"colorTheme":"dark","dateRange":"1D","showChart":false,"locale":"ja","width":"100%","height":"100%","isTransparent":true,"showSymbolLogo":false,
+          "tabs":[{"title":"先物","symbols":[
+            {"s":"TVC:SPX",        "d":"E-mini S&P 500"},
+            {"s":"TVC:NDX",        "d":"E-mini NASDAQ 100"},
+            {"s":"TVC:VIX",        "d":"VIX先物"},
+            {"s":"TVC:SX5E",       "d":"Euro Stoxx 50"},
+            {"s":"TVC:DAX",        "d":"DAX先物"},
+            {"s":"OANDA:JP225USD", "d":"日経225先物 (大阪)"},
+            {"s":"OANDA:JP225USD", "d":"日経225先物 (SGX)"},
+            {"s":"OANDA:JP225USD", "d":"日経225先物 (CME)"},
+            {"s":"TVC:NIFTY",      "d":"GIFT Nifty 50先物"},
+            {"s":"TVC:HSI",        "d":"香港ハンセン指数先物"},
+            {"s":"OANDA:CN50USD",  "d":"FTSE 中国A50先物"}
+          ]}]}
+          </script></div>
         </div>
       </div>
     </div>
@@ -242,30 +124,23 @@
     <!-- COL2: SPOT AMERICAS -->
     <div class="col">
       <div class="col-header"><div class="col-header-icon icon-cyan"></div><div class="col-title">SPOT — AMERICAS</div></div>
-      <div style="flex:1; display:flex; flex-direction:column; overflow:hidden;">
+      <div style="flex:1;display:flex;flex-direction:column;overflow:hidden;">
         <div class="section-label"><span>北米・中南米</span></div>
         <div class="widget-block" style="flex:1;">
-          <div class="tradingview-widget-container">
-            <div class="tradingview-widget-container__widget"></div>
-            <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-market-overview.js" async>
-            {
-              "colorTheme": "dark", "dateRange": "1D", "showChart": false, "locale": "ja", "width": "100%", "height": "100%", "isTransparent": true,
-              "tabs": [{
-                "title": "Americas",
-                "symbols": [
-                  {"s": "CAPITALCOM:US30",     "d": "NYダウ平均 (DJIA)"},
-                  {"s": "TVC:SPX",             "d": "S&P 500"},
-                  {"s": "TVC:IXIC",            "d": "NASDAQ Composite"},
-                  {"s": "TVC:NDX",             "d": "NASDAQ 100"},
-                  {"s": "CAPITALCOM:US2000",   "d": "Russell 2000"},
-                  {"s": "INDEX:ME",            "d": "メキシコ ボルサ"},
-                  {"s": "BMFBOVESPA:IBOV",     "d": "ブラジル ボベスパ"},
-                  {"s": "INDEX:SPCLXIPSA",     "d": "チリ IPSA"}
-                ]
-              }]
-            }
-            </script>
-          </div>
+          <div class="tradingview-widget-container"><div class="tradingview-widget-container__widget"></div>
+          <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-market-overview.js" async>
+          {"colorTheme":"dark","dateRange":"1D","showChart":false,"locale":"ja","width":"100%","height":"100%","isTransparent":true,"showSymbolLogo":false,
+          "tabs":[{"title":"Americas","symbols":[
+            {"s":"TVC:DJI",         "d":"NYダウ平均 (DJIA)"},
+            {"s":"TVC:SPX",         "d":"S&P 500"},
+            {"s":"TVC:IXIC",        "d":"NASDAQ Composite"},
+            {"s":"TVC:NDX",         "d":"NASDAQ 100"},
+            {"s":"TVC:RUT",         "d":"Russell 2000"},
+            {"s":"BMV:IPC",         "d":"メキシコ ボルサ"},
+            {"s":"BMFBOVESPA:IBOV", "d":"ブラジル ボベスパ"},
+            {"s":"BVS:SPCLXIPSA",   "d":"チリ IPSA"}
+          ]}]}
+          </script></div>
         </div>
       </div>
     </div>
@@ -273,33 +148,26 @@
     <!-- COL3: SPOT EMEA & APAC -->
     <div class="col">
       <div class="col-header"><div class="col-header-icon icon-cyan"></div><div class="col-title">SPOT — EMEA & APAC</div></div>
-      <div style="flex:1; display:flex; flex-direction:column; overflow:hidden;">
+      <div style="flex:1;display:flex;flex-direction:column;overflow:hidden;">
         <div class="section-label"><span>欧州・アジア</span></div>
         <div class="widget-block" style="flex:1;">
-          <div class="tradingview-widget-container">
-            <div class="tradingview-widget-container__widget"></div>
-            <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-market-overview.js" async>
-            {
-              "colorTheme": "dark", "dateRange": "1D", "showChart": false, "locale": "ja", "width": "100%", "height": "100%", "isTransparent": true,
-              "tabs": [{
-                "title": "EMEA & APAC",
-                "symbols": [
-                  {"s": "CAPITALCOM:EURO50",  "d": "STOXX Europe 600"},
-                  {"s": "INDEX:FTSE",        "d": "英 FTSE 100"},
-                  {"s": "INDEX:DAX",         "d": "独 DAX"},
-                  {"s": "INDEX:CAC40",       "d": "仏 CAC 40"},
-                  {"s": "INDEX:FTSEMIB",     "d": "伊 FTSE MIB"},
-                  {"s": "HSI:HSI",           "d": "香港 ハンセン指数"},
-                  {"s": "SSE:000001",        "d": "上海総合指数"},
-                  {"s": "SZSE:399001",       "d": "深圳成分指数"},
-                  {"s": "INDEX:KOSPI",       "d": "韓国 KOSPI"},
-                  {"s": "BSE:SENSEX",        "d": "インド SENSEX"},
-                  {"s": "INDEX:NIFTY500",    "d": "インド Nifty 50"}
-                ]
-              }]
-            }
-            </script>
-          </div>
+          <div class="tradingview-widget-container"><div class="tradingview-widget-container__widget"></div>
+          <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-market-overview.js" async>
+          {"colorTheme":"dark","dateRange":"1D","showChart":false,"locale":"ja","width":"100%","height":"100%","isTransparent":true,"showSymbolLogo":false,
+          "tabs":[{"title":"EMEA & APAC","symbols":[
+            {"s":"TVC:SX5E",    "d":"STOXX Europe 600"},
+            {"s":"TVC:UKX",     "d":"英 FTSE 100"},
+            {"s":"TVC:DAX",     "d":"独 DAX"},
+            {"s":"TVC:CAC40",   "d":"仏 CAC 40"},
+            {"s":"TVC:FTMIB",   "d":"伊 FTSE MIB"},
+            {"s":"TVC:HSI",     "d":"香港 ハンセン指数"},
+            {"s":"SSE:000001",  "d":"上海総合指数"},
+            {"s":"SZSE:399001", "d":"深圳成分指数"},
+            {"s":"TVC:KOSPI",   "d":"韓国 KOSPI"},
+            {"s":"BSE:SENSEX",  "d":"インド SENSEX"},
+            {"s":"TVC:NIFTY",   "d":"インド Nifty 50"}
+          ]}]}
+          </script></div>
         </div>
       </div>
     </div>
@@ -308,58 +176,39 @@
     <div class="col">
       <div class="col-header"><div class="col-header-icon icon-amber"></div><div class="col-title">RATES, FX & COMMODITIES</div></div>
       <div class="rates-col-body">
-
-        <!-- 上段：米国債・為替（5行スクロールなし） -->
         <div class="rates-section bond-fx-area">
           <div class="section-label"><span>米国債・為替</span></div>
           <div class="widget-block" style="flex:1;">
-            <div class="tradingview-widget-container">
-              <div class="tradingview-widget-container__widget"></div>
-              <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-market-overview.js" async>
-              {
-                "colorTheme": "dark", "dateRange": "1D", "showChart": false, "locale": "ja", "width": "100%", "height": "100%", "isTransparent": true,
-                "tabs": [{
-                  "title": "金利・為替",
-                  "symbols": [
-                    {"s": "TVC:US10Y",       "d": "米国10年国債利回り — 景況感とインフレ期待"},
-                    {"s": "TVC:US02Y",       "d": "米国2年国債利回り — 金融政策の思惑"},
-                    {"s": "FX:USDJPY",       "d": "ドル円 (USD/JPY) — アルゴリズムと資本の血流"},
-                    {"s": "FX:EURJPY",       "d": "ユーロ円 (EUR/JPY) — 企業間競争と利益率"},
-                    {"s": "CAPITALCOM:DXY",  "d": "ドルインデックス (DXY) — 米ドルの総合力"}
-                  ]
-                }]
-              }
-              </script>
-            </div>
+            <div class="tradingview-widget-container"><div class="tradingview-widget-container__widget"></div>
+            <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-market-overview.js" async>
+            {"colorTheme":"dark","dateRange":"1D","showChart":false,"locale":"ja","width":"100%","height":"100%","isTransparent":true,"showSymbolLogo":false,
+            "tabs":[{"title":"金利・為替","symbols":[
+              {"s":"TVC:US10Y", "d":"米国10年国債利回り — 景況感とインフレ期待"},
+              {"s":"TVC:US02Y", "d":"米国2年国債利回り — 金融政策の思惑"},
+              {"s":"FX:USDJPY", "d":"ドル円 (USD/JPY) — アルゴリズムと資本の血流"},
+              {"s":"FX:EURJPY", "d":"ユーロ円 (EUR/JPY) — 企業間競争と利益率"},
+              {"s":"TVC:DXY",   "d":"ドルインデックス (DXY) — 米ドルの総合力"}
+            ]}]}
+            </script></div>
           </div>
         </div>
-
-        <!-- 下段：商品先物 -->
         <div class="rates-section commo-area">
           <div class="section-label"><span>商品先物 / CFD</span></div>
           <div class="widget-block" style="flex:1;">
-            <div class="tradingview-widget-container">
-              <div class="tradingview-widget-container__widget"></div>
-              <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-market-overview.js" async>
-              {
-                "colorTheme": "dark", "dateRange": "1D", "showChart": false, "locale": "ja", "width": "100%", "height": "100%", "isTransparent": true,
-                "tabs": [{
-                  "title": "商品",
-                  "symbols": [
-                    {"s": "TVC:GOLD",        "d": "金先物 (GC) — 安全資産"},
-                    {"s": "TVC:SILVER",      "d": "銀先物 (SI) — 投機センサー"},
-                    {"s": "TVC:COPPER",      "d": "銅先物 (HG) — 製造業指標"},
-                    {"s": "TVC:USOIL",       "d": "WTI原油先物 (CL)"},
-                    {"s": "TVC:UKOIL",       "d": "ブレント原油先物 (BZ)"},
-                    {"s": "TVC:USNG",        "d": "天然ガス先物 (NG)"}
-                  ]
-                }]
-              }
-              </script>
-            </div>
+            <div class="tradingview-widget-container"><div class="tradingview-widget-container__widget"></div>
+            <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-market-overview.js" async>
+            {"colorTheme":"dark","dateRange":"1D","showChart":false,"locale":"ja","width":"100%","height":"100%","isTransparent":true,"showSymbolLogo":false,
+            "tabs":[{"title":"商品","symbols":[
+              {"s":"TVC:GOLD",   "d":"金先物 (GC) — 安全資産"},
+              {"s":"TVC:SILVER", "d":"銀先物 (SI) — 投機センサー"},
+              {"s":"TVC:COPPER", "d":"銅先物 (HG) — 製造業指標"},
+              {"s":"TVC:USOIL",  "d":"WTI原油先物 (CL)"},
+              {"s":"TVC:UKOIL",  "d":"ブレント原油先物 (BZ)"},
+              {"s":"TVC:USNG",   "d":"天然ガス先物 (NG)"}
+            ]}]}
+            </script></div>
           </div>
         </div>
-
       </div>
     </div>
 
@@ -382,11 +231,10 @@
 <script>
   function updateClock() {
     const now = new Date();
-    const opts = { timeZone: 'Asia/Tokyo', hour12: false, year:'numeric', month:'2-digit', day:'2-digit', hour:'2-digit', minute:'2-digit', second:'2-digit' };
-    document.getElementById('clock').textContent = new Intl.DateTimeFormat('ja-JP', opts).format(now) + ' JST';
+    const opts = {timeZone:'Asia/Tokyo',hour12:false,year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',second:'2-digit'};
+    document.getElementById('clock').textContent = new Intl.DateTimeFormat('ja-JP',opts).format(now) + ' JST';
   }
   updateClock(); setInterval(updateClock, 1000);
-
   let loaded = false;
   function hideLoader() {
     if (loaded) return; loaded = true;
